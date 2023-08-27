@@ -103,7 +103,8 @@ int parseTokens(char tokens[], int maxLen, long long **val) {
   int numbersIter = 0;
   int operationsIter = 0;
 
-  while (numbersIter < numbersCount) {
+  printf("third %lld\n", numbers[2]);
+  while (numbersIter <= numbersCount) {
     switch (operations[operationsIter]) {
     case '+':
       out += numbers[numbersIter] + numbers[numbersIter + 1];
