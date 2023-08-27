@@ -15,10 +15,7 @@ int lexInput(char input[], char *tokens) {
   char *ptr = input;
   int tokenHead = 0;
 
-  printf("Input %s\n", input);
   while (*ptr != '\0') {
-    printf("ran %c\n", *ptr);
-
     // Check if char in *ptr is numeric or a valid operation
     if (isNumeric(*ptr) || *ptr == '+' || *ptr == '-' || *ptr == '/' ||
         *ptr == '*') {
@@ -35,17 +32,15 @@ int lexInput(char input[], char *tokens) {
   }
   // Needed to be seen as valid string
   tokens[tokenHead] = '\0';
-  printf("Tokens %s\n", tokens);
 
   return 0;
 }
 
-int sliceArrToInt(char input[], int start, int end, long long outVal) {
+int sliceArrToInt(char input[], int start, int end, long long *outVal) {
   char *slice;
   int sliceLen = (end - start) + 2;
   slice = calloc(sliceLen, sizeof(char));
 
-  printf("%d sliceLen\nstart %d end %d\n", sliceLen, start, end);
   if (slice == NULL) {
     fprintf(stderr, "Unable to allocate space new slice!\n");
     return 1;
@@ -54,23 +49,21 @@ int sliceArrToInt(char input[], int start, int end, long long outVal) {
   for (int i = start; i < end + 1; i++) {
     slice[i - start] = input[i];
   }
-  slice[end + 1] = '\0';
-  printf("slice %s\n", slice);
 
-  outVal = atoi(slice);
-  printf("outval %llu\n", outVal);
+  *outVal = atoi(slice);
 
   free(slice);
   return 0;
 }
 
-int parseTokens(char tokens[], int maxLen, int *val) {
+int parseTokens(char tokens[], int maxLen, long long **val) {
   // This is a tempory implementation that I can iterate on. I don't want to go
   // home with it not functioning Current only supports x <OPERATION> y
-  int out;
+  long long out = 0;
   long long *numbers;
   char *operations;
-  int numbersPointer, operationsPointer = 0;
+  int numbersPointer = 0;
+  int operationsPointer = 0;
 
   numbers = calloc(maxLen, sizeof(long long));
   int numbersCount = 0;
@@ -90,11 +83,10 @@ int parseTokens(char tokens[], int maxLen, int *val) {
     operations[operationsPointer] = *token;
     operationsPointer++;
     long long temp;
-    sliceArrToInt(tokens, anchor, head - 1, temp);
+    sliceArrToInt(tokens, anchor, head - 1, &temp);
     head += 1;
     anchor = head;
     numbers[numbersPointer] = temp;
-    printf("temp %lld\npointer %d\nvalue %lld\n", temp, numbersPointer, numbers[numbersPointer]);
     numbersCount = numbersPointer;
     numbersPointer++;
     token++;
@@ -103,26 +95,27 @@ int parseTokens(char tokens[], int maxLen, int *val) {
   // This means that the loop finished on a digit, and needs to be added
   if (anchor != head) {
     long long temp;
-    sliceArrToInt(tokens, anchor, head - 1, temp);
+    sliceArrToInt(tokens, anchor, head - 1, &temp);
     numbers[numbersPointer] = temp;
+    numbersCount++;
   }
 
   int numbersIter = 0;
   int operationsIter = 0;
-  printf("count %d\n", numbersCount);
+
   while (numbersIter < numbersCount) {
     switch (operations[operationsIter]) {
     case '+':
-      out += numbers[numbersIter] + numbers[numbersIter];
+      out += numbers[numbersIter] + numbers[numbersIter + 1];
       break;
     case '-':
-      out += numbers[numbersIter] - numbers[numbersIter];
+      out += numbers[numbersIter] - numbers[numbersIter + 1];
       break;
     case '*':
-      out += numbers[numbersIter] * numbers[numbersIter];
+      out += numbers[numbersIter] * numbers[numbersIter + 1];
       break;
     case '/':
-      out += numbers[numbersIter] / numbers[numbersIter];
+      out += numbers[numbersIter] / numbers[numbersIter + 1];
       break;
     }
 
@@ -130,7 +123,7 @@ int parseTokens(char tokens[], int maxLen, int *val) {
     operationsIter++;
   }
 
-  *val = out;
+  **val = out;
 
   // Clean up
   free(numbers);
@@ -146,11 +139,10 @@ int strLen(const char *str) {
   return (s - str);
 }
 
-int calcInput(char input[], int *val) {
+int calcInput(char input[], long long *val) {
   char *tokens;
   int tokensLen = strLen(input);
 
-  printf("tokensLen %d", tokensLen);
   tokens = calloc(tokensLen, sizeof(char));
 
   if (tokens == NULL) {
@@ -160,7 +152,7 @@ int calcInput(char input[], int *val) {
 
   // call lexInput and parseTokens
   int lexResult = lexInput(input, tokens);
-  parseTokens(tokens, tokensLen, val);
+  parseTokens(tokens, tokensLen, &val);
 
   free(tokens);
 
@@ -182,12 +174,11 @@ void calcLoop() {
       exit = 1;
       break;
     }
-    printf("%s", input);
 
-    int val;
+    long long val;
     calcInput(input, &val);
 
-    printf("val %d\n", val);
+    printf("Result %lld\n", val);
   }
 }
 
