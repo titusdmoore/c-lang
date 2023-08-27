@@ -55,9 +55,10 @@ int sliceArrToInt(char input[], int start, int end, long long outVal) {
     slice[i - start] = input[i];
   }
   slice[end + 1] = '\0';
+  printf("slice %s\n", slice);
 
   outVal = atoi(slice);
-  printf("%llu\n", outVal);
+  printf("outval %llu\n", outVal);
 
   free(slice);
   return 0;
@@ -93,7 +94,7 @@ int parseTokens(char tokens[], int maxLen, int *val) {
     head += 1;
     anchor = head;
     numbers[numbersPointer] = temp;
-    printf("pointer %d\nvalue %lld\n", numbersPointer, numbers[numbersPointer]);
+    printf("temp %lld\npointer %d\nvalue %lld\n", temp, numbersPointer, numbers[numbersPointer]);
     numbersCount = numbersPointer;
     numbersPointer++;
     token++;
