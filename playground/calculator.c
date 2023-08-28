@@ -18,7 +18,7 @@ int lexInput(char input[], char *tokens) {
   while (*ptr != '\0') {
     // Check if char in *ptr is numeric or a valid operation
     if (isNumeric(*ptr) || *ptr == '+' || *ptr == '-' || *ptr == '/' ||
-        *ptr == '*') {
+        *ptr == '*' || *ptr == '%') {
 
       // Add valid token to tokens arr
       tokens[tokenHead] = *ptr;
@@ -116,6 +116,9 @@ int parseTokens(char tokens[], int maxLen, long long **val) {
       break;
     case '/':
       out = out / numbers[numbersIter];
+      break;
+    case '%':
+      out = out % numbers[numbersIter];
       break;
     }
 
