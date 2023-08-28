@@ -59,7 +59,6 @@ int sliceArrToInt(char input[], int start, int end, long long *outVal) {
 int parseTokens(char tokens[], int maxLen, long long **val) {
   // This is a tempory implementation that I can iterate on. I don't want to go
   // home with it not functioning Current only supports x <OPERATION> y
-  long long out = 0;
   long long *numbers;
   char *operations;
   int numbersPointer = 0;
@@ -100,27 +99,27 @@ int parseTokens(char tokens[], int maxLen, long long **val) {
     numbersCount++;
   }
 
-  int numbersIter = 0;
+  int numbersIter = 1;
   int operationsIter = 0;
+  long long out = numbers[0];
 
-  printf("third %lld\nsecond op %c\n", numbers[2], operations[1]);
   while (numbersIter <= numbersCount) {
     switch (operations[operationsIter]) {
     case '+':
-      out += numbers[numbersIter] + numbers[numbersIter + 1];
+      out = out + numbers[numbersIter];
       break;
     case '-':
-      out += numbers[numbersIter] - numbers[numbersIter + 1];
+      out = out - numbers[numbersIter];
       break;
     case '*':
-      out += numbers[numbersIter] * numbers[numbersIter + 1];
+      out = out * numbers[numbersIter];
       break;
     case '/':
-      out += numbers[numbersIter] / numbers[numbersIter + 1];
+      out = out / numbers[numbersIter];
       break;
     }
 
-    numbersIter += 2;
+    numbersIter++;
     operationsIter++;
   }
 
