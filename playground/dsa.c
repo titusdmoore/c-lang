@@ -15,6 +15,8 @@ int add(linkedList *list, int val) {
   newNode.val = val;
   newNode.next = NULL;
 
+  list->len++;
+
   if (list->head == NULL) {
     list->head = &newNode;
     return 0;
@@ -29,6 +31,25 @@ int add(linkedList *list, int val) {
   }
 
   iterNode->next = &newNode;
+
+  return 0;
+}
+
+int bSort(linkedList *list) {
+  node *maxNode = list->head;
+  node *iterNode = maxNode;
+
+  for (int i = 0; i < list->len; i++) {
+    if (iterNode->next != NULL) {
+      break;
+    }
+
+    iterNode = iterNode->next;
+
+    if (maxNode->val > iterNode->val) {
+      maxNode = iterNode;
+    }
+  }
 
   return 0;
 }
