@@ -13,6 +13,7 @@ typedef struct LinkedList {
 int add(linkedList *list, int val) {
   struct Node newNode;
   newNode.val = val;
+  printf("newNode val %d\nval: %d \n", newNode.val, val);
   newNode.next = NULL;
 
   list->len++;
@@ -31,6 +32,7 @@ int add(linkedList *list, int val) {
   }
 
   iterNode->next = &newNode;
+  printf("this: %d\n", iterNode->next->val);
 
   return 0;
 }
@@ -61,7 +63,7 @@ int main() {
 
   add(ll, 8);
   printf("%d\n", linkedList.len);
-  printf("Val %d\n", linkedList.head->val);
+  printf("Val %d\n", ll->head->val);
   add(ll, 69);
   printf("%d\n", linkedList.len);
   add(ll, 76);
