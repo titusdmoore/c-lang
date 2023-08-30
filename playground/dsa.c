@@ -36,18 +36,17 @@ int add(linkedList *list, int val) {
 }
 
 int bSort(linkedList *list) {
-  node *maxNode = list->head;
-  node *iterNode = maxNode;
+  node *workingNode = list->head;
+
+  // loop through len
+  //  - check if next isn't null
+  //  - set workingNode
+  //  - if workingNode.val > workingNode.next.val flip two nodes else working
+  //  node = next
 
   for (int i = 0; i < list->len; i++) {
-    if (iterNode->next != NULL) {
-      break;
-    }
-
-    iterNode = iterNode->next;
-
-    if (maxNode->val > iterNode->val) {
-      maxNode = iterNode;
+    if (workingNode->val > workingNode->next->val) {
+      node *nextNode = workingNode->next;
     }
   }
 
@@ -61,12 +60,22 @@ int main() {
   ll = &linkedList;
 
   add(ll, 8);
-  add(ll, 6);
-  add(ll, 6);
-  add(ll, 6);
-  add(ll, 6);
-  add(ll, 6);
-  add(ll, 6);
+  printf("%d\n", linkedList.len);
+  printf("Val %d\n", linkedList.head->val);
+  add(ll, 69);
+  printf("%d\n", linkedList.len);
+  add(ll, 76);
+  printf("%d\n", linkedList.len);
+  add(ll, 45);
+  printf("%d\n", linkedList.len);
+  add(ll, 62);
+  printf("%d\n", linkedList.len);
+  add(ll, 4);
+  printf("%d\n", linkedList.len);
+  add(ll, 0);
+  printf("%d\n", linkedList.len);
+  printf("%d\n", ll->head->next->val);
   add(ll, 1);
+  printf("%d\n", linkedList.len);
   printf("%d\n", ll->head->next->val);
 }
