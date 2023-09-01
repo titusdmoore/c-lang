@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef struct Node {
   int val;
@@ -10,31 +11,31 @@ typedef struct LinkedList {
   int len;
 } linkedList;
 
-int add(linkedList *list, int val) {
-  struct Node newNode;
-  newNode.val = val;
-  printf("newNode val %d\nval: %d \n", newNode.val, val);
-  newNode.next = NULL;
+node *add(linkedList *list, int val) {
+  node *newNode;
+  newNode = malloc(sizeof(struct Node));
+  newNode->val = val;
+  newNode->next = NULL;
 
   list->len++;
 
   if (list->head == NULL) {
-    list->head = &newNode;
+    list->head = newNode;
     return 0;
   }
 
   node *iterNode = list->head;
+  printf("test %d\n", iterNode->next != NULL);
 
-  if (iterNode->next != NULL) {
-    while (iterNode->next != NULL) {
-      iterNode = iterNode->next;
-    }
+  while (iterNode->next != NULL) {
+    iterNode = iterNode->next;
+    printf("I am running oh so very hard\n");
   }
 
-  iterNode->next = &newNode;
+  iterNode->next = newNode;
   printf("this: %d\n", iterNode->next->val);
 
-  return 0;
+  return newNode;
 }
 
 int bSort(linkedList *list) {
@@ -55,11 +56,16 @@ int bSort(linkedList *list) {
   return 0;
 }
 
+// TODO implement freeList which runs free on every node
+
 int main() {
   linkedList *ll, linkedList;
   linkedList.len = 0;
   linkedList.head = NULL;
   ll = &linkedList;
+
+  // Create nodes
+  // refactor to pass nodes. or you could just return a node pointer ot add
 
   add(ll, 8);
   printf("%d\n", linkedList.len);
