@@ -102,4 +102,6 @@ int main() {
   add(ll, 1);
   printf("%d\n", linkedList.len);
   printf("%d\n", ll->head->next->val);
+
+  freeList(ll);
 }
