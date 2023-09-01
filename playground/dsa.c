@@ -38,6 +38,22 @@ node *add(linkedList *list, int val) {
   return newNode;
 }
 
+int freeList(linkedList *list) {
+  node *iterNode = list->head;
+
+  if (iterNode == NULL) {
+    return 0;
+  }
+
+  while (iterNode->next != NULL) {
+    node *nextNode = iterNode->next;
+    free(iterNode);
+    iterNode = nextNode;
+  }
+
+  return 0;
+}
+
 int bSort(linkedList *list) {
   node *workingNode = list->head;
 
