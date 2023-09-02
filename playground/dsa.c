@@ -67,10 +67,14 @@ int bSort(linkedList *list) {
   //  - if workingNode.val > workingNode.next.val flip two nodes else working
   //  node = next
   while (workingNode != NULL) {
+    if (workingNode->next == NULL) {
+      break;
+    }
     // printf("val 1 %d\nval 2 %d\n", workingNode->val, workingNode->next->val);
     if (workingNode->val > workingNode->next->val) {
       printf("inside of the test case\n");
       if (prevNode == NULL) {
+        printf("This branch of it\n");
         list->head = workingNode->next;
         workingNode->next = list->head->next;
         list->head->next = workingNode;
@@ -82,10 +86,13 @@ int bSort(linkedList *list) {
       // to swap them we need to set prevNode->next to workingNode->next we then
       // need to set prevNode->next->next to working node, but first we need to
       // set that value to workingNode->next
+
+      // Move workingNode out of the tree by setting workingNode->next to
+      // prevNode->next
       prevNode->next = workingNode->next;
-      workingNode->next = prevNode->next->next;
-      prevNode->next->next = workingNode;
-      continue;
+      prevNode = workingNode->next;
+      workingNode->next = prevNode->next;
+      prevNode->next = workingNode;
     }
 
     printf("got here\n");
@@ -123,6 +130,7 @@ int main() {
 
   printf("Sort\n");
   bSort(ll);
+  printf("After sort\n");
 
   iterNode = linkedList.head;
   while (iterNode != NULL) {
