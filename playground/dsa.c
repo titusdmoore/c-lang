@@ -25,15 +25,12 @@ node *add(linkedList *list, int val) {
   }
 
   node *iterNode = list->head;
-  printf("test %d\n", iterNode->next != NULL);
 
   while (iterNode->next != NULL) {
     iterNode = iterNode->next;
-    printf("I am running oh so very hard\n");
   }
 
   iterNode->next = newNode;
-  printf("this: %d\n", iterNode->next->val);
 
   return newNode;
 }
@@ -54,19 +51,45 @@ int freeList(linkedList *list) {
   return 0;
 }
 
+// [ 5, 6, 24, 0, 5, 10 ]
+// 5 < 6
+// 6 < 24
+// 24 > 0 needs swap??
+// 24 > 5 needs swap
+//
 int bSort(linkedList *list) {
   node *workingNode = list->head;
+  node *prevNode = NULL;
 
   // loop through len
   //  - check if next isn't null
   //  - set workingNode
   //  - if workingNode.val > workingNode.next.val flip two nodes else working
   //  node = next
-
-  for (int i = 0; i < list->len; i++) {
+  while (workingNode != NULL) {
+    // printf("val 1 %d\nval 2 %d\n", workingNode->val, workingNode->next->val);
     if (workingNode->val > workingNode->next->val) {
-      node *nextNode = workingNode->next;
+      printf("inside of the test case\n");
+      if (prevNode == NULL) {
+        list->head = workingNode->next;
+        workingNode->next = list->head->next;
+        list->head->next = workingNode;
+        continue;
+      }
+
+      // we have prevNode, and currentNode
+      // We have found that current node is greater than the next val so we need
+      // to swap them we need to set prevNode->next to workingNode->next we then
+      // need to set prevNode->next->next to working node, but first we need to
+      // set that value to workingNode->next
+      prevNode->next = workingNode->next;
+      workingNode->next = prevNode->next->next;
+      prevNode->next->next = workingNode;
+      continue;
     }
+
+    printf("got here\n");
+    workingNode = workingNode->next;
   }
 
   return 0;
@@ -84,24 +107,29 @@ int main() {
   // refactor to pass nodes. or you could just return a node pointer ot add
 
   add(ll, 8);
-  printf("%d\n", linkedList.len);
-  printf("Val %d\n", ll->head->val);
   add(ll, 69);
-  printf("%d\n", linkedList.len);
   add(ll, 76);
-  printf("%d\n", linkedList.len);
   add(ll, 45);
-  printf("%d\n", linkedList.len);
   add(ll, 62);
-  printf("%d\n", linkedList.len);
   add(ll, 4);
-  printf("%d\n", linkedList.len);
   add(ll, 0);
-  printf("%d\n", linkedList.len);
-  printf("%d\n", ll->head->next->val);
   add(ll, 1);
-  printf("%d\n", linkedList.len);
-  printf("%d\n", ll->head->next->val);
+
+  node *iterNode = linkedList.head;
+  while (iterNode != NULL) {
+    printf("Ran val: %d\n", iterNode->val);
+    iterNode = iterNode->next;
+  }
+
+  printf("Sort\n");
+  bSort(ll);
+
+  iterNode = linkedList.head;
+  while (iterNode != NULL) {
+    printf("Ran val: %d\n", iterNode->val);
+    iterNode = iterNode->next;
+  }
+  free(iterNode);
 
   freeList(ll);
 }
