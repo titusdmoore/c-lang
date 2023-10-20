@@ -25,9 +25,13 @@ int main() {
 
   struct sockaddr_in addr;
   int addrlen = sizeof(addr);
+
   addr.sin_family = AF_INET;
   addr.sin_port = htons(PORT);
   addr.sin_addr.s_addr = INADDR_ANY;
+
+  struct sockaddr_in client_addr;
+  int client_addrlen = sizeof(client_addr);
 
   if ( bind(sockfd, (struct sockaddr *)&addr, addrlen) != 0 ) {
     perror("HTTP Server (bind)");
@@ -49,6 +53,13 @@ int main() {
       continue;
     }
     printf("Accepted Connection");
+    
+    int sockname = getpeername(connsockfd, (struct sockaddr *)&client_addr, (socklen_t *)&client_addrlen);
+
+    if ( sockname < 0 ) {
+      perror("HTTP Server (getsockname)");
+      continue;
+    }
 
     // Read data from requests
     int valread = read(connsockfd, buffer, BUFFER_SIZE);
@@ -56,6 +67,10 @@ int main() {
       perror("HTTP Server (read)");
       continue;
     }
+
+    char method[BUFFER_SIZE], uri[BUFFER_SIZE], version[BUFFER_SIZE];
+    sscanf(buffer, "%s %s %s", method, uri, version);
+    printf("[%s:%u] %s %s %s\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port), method, uri, version);
 
     if ( write(connsockfd, resp, strlen(resp)) < 0 ) {
       perror("HTTP Server (write)");
